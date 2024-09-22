@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import com.xncoder.Ecommerce.Products.Product;
 import com.xncoder.Ecommerce.Products.ProductDTO;
 import com.xncoder.Ecommerce.Products.ProductServices;
@@ -23,7 +22,7 @@ public class MainController {
 		List<Product> products = ps.getAllProducts();
 		List<ProductDTO> productDTOs = products.stream().map(product -> {
             String base64Image = Base64.getEncoder().encodeToString(product.getImage());
-            return new ProductDTO(product.getProduct_id(), product.getName(), product.getDescription(), product.getPrice(), base64Image);
+            return new ProductDTO(product.getId(), product.getName(), product.getDescription(), product.getPrice(), base64Image);
         }).collect(Collectors.toList());
 		model.addAttribute("products", productDTOs);
 		return "index";
@@ -54,7 +53,7 @@ public class MainController {
 	public String buy() {
 		return "buy_now";
 	}
-	
+
 	@GetMapping("/order_success")
 	public String order() {
 		return "order_success";

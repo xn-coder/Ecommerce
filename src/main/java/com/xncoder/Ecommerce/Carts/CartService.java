@@ -3,14 +3,13 @@ package com.xncoder.Ecommerce.Carts;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.xncoder.Ecommerce.Customer.Customers;
 import com.xncoder.Ecommerce.ExceptionClass;
 import com.xncoder.Ecommerce.Customer.CustomerRepository;
+import com.xncoder.Ecommerce.Customer.Customers;
 import com.xncoder.Ecommerce.Products.Product;
 import com.xncoder.Ecommerce.Products.ProductRepository;
 
@@ -20,73 +19,68 @@ public class CartService {
 	private CartRepository cr;
 	
 	@Autowired
-	private CustomerRepository cmr;
+	private ProductRepository pr;
 	
 	@Autowired
-	private ProductRepository pr;
+	private CustomerRepository ctr;
 	
 	public Carts getCartById(Long cartId) {
 		return cr.findById(cartId).orElseThrow(() -> new ExceptionClass("Cart is not found."));
 	}
 	
 	public void addProductToCart(Long customerId, Long productId) {
-        Optional<Customers> customer = cmr.findById(customerId);
-        Optional<Product> product = pr.findById(productId);
+		Customers customer = ctr.findById(customerId).orElseThrow(() -> new ExceptionClass("Customer not found"));
 
-        if (customer.isPresent() && product.isPresent()) {
-            Carts cartItem = cr.findByCustomerAndProduct(customer.get(), product.get());
+		Carts cartItem = cr.findByCustomerAndProduct(customer, productId);
 
-            if (cartItem != null) {
-                cartItem.setQuantity(cartItem.getQuantity() + 1);
-            } else {
-                cartItem = new Carts();
-                cartItem.setCustomer(customer.get());
-                cartItem.setProduct(product.get());
-                cartItem.setQuantity(1);
-            }
-            
-            cr.save(cartItem);
-        } else {
-            throw new RuntimeException("Customer or Product not found");
-        }
-    }
+		if (cartItem != null) {
+			cartItem.setQuantity(cartItem.getQuantity() + 1);
+		} else {
+			cartItem = new Carts();
+			cartItem.setCustomer(customer);
+			cartItem.setProduct(productId);
+			cartItem.setQuantity(1);
+		}
+		
+		cr.save(cartItem);
+	}
+	
+	public void clearCarts(Long customerId) {
+		List<Carts> carts = cr.findByCustomerId(customerId);
+		cr.deleteAll(carts);
+	}
 	
 	public void removeProductFromCart(Long customerId, Long productId) {
-        Optional<Customers> customer = cmr.findById(customerId);
-        Optional<Product> product = pr.findById(productId);
+		Customers customer = ctr.findById(customerId).orElseThrow(() -> new ExceptionClass("Customer not found"));
+		Carts cartItem = cr.findByCustomerAndProduct(customer, productId);
 
-        if (customer.isPresent() && product.isPresent()) {
-            Carts cartItem = cr.findByCustomerAndProduct(customer.get(), product.get());
-
-            if (cartItem != null) {
-                if (cartItem.getQuantity() > 1) {
-                    cartItem.setQuantity(cartItem.getQuantity() - 1);
-                    cr.save(cartItem);
-                } else {
-                    cr.delete(cartItem);
-                }
-            } else {
-                throw new RuntimeException("Product is not in the cart");
-            }
-        } else {
-            throw new RuntimeException("Customer or Product not found");
-        }
-    }
+		if (cartItem != null) {
+			if (cartItem.getQuantity() > 1) {
+				cartItem.setQuantity(cartItem.getQuantity() - 1);
+				cr.save(cartItem);
+			} else {
+				cr.delete(cartItem);
+			}
+		} else {
+			throw new RuntimeException("Product is not in the cart");
+		}
+	}
 	
 	public int getCartProductCount(Long customerId) {
-        List<Carts> cartItems = cr.findByCustomerId(customerId);
+		List<Carts> cartItems = cr.findByCustomerId(customerId);
 
-        int totalQuantity = cartItems.stream()
-                .mapToInt(Carts::getQuantity)
-                .sum();
+		int totalQuantity = cartItems.stream()
+				.mapToInt(Carts::getQuantity)
+				.sum();
 
-        return totalQuantity;
-    }
+		return totalQuantity;
+	}
 
-	public List<CartDTO>getAllCartProducts(Long customerId) {
+	public List<CartDTO> getAllCartProducts(Long customerId) {
 		List<CartDTO> carts = new ArrayList<CartDTO>();
 		for(Carts cart: cr.findByCustomerId(customerId)) {
-			CartDTO c = new CartDTO(cart.getId(), cart.getProduct().getProduct_id(), Base64.getEncoder().encodeToString(cart.getProduct().getImage()), cart.getProduct().getName(), cart.getQuantity(), cart.getProduct().getPrice());
+			Product p = pr.findById(cart.getProduct()).orElseThrow(() -> new ExceptionClass("Product not found"));
+			CartDTO c = new CartDTO(cart.getId(), p.getId(), Base64.getEncoder().encodeToString(p.getImage()), p.getName(), cart.getQuantity(), p.getPrice());
 			carts.add(c);
 		}
 		return carts;

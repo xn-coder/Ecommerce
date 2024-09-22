@@ -83,12 +83,12 @@
     <div class="card">
         <div class="card-body">
             <h4>Order Details</h4>
-            <p><strong>Order ID:</strong> <span id="order-id"></span></p>
-            <p><strong>Name:</strong> <span id="user-name"></span></p>
-            <p><strong>Email:</strong> <span id="user-email"></span></p>
-            <p><strong>Mobile:</strong> <span id="user-mobile"></span></p>
-            <p><strong>Address:</strong> <span id="user-address"></span></p>
-            <p><strong>Payment Mode:</strong> <span id="payment-mode"></span></p>
+            <p><strong>Order ID:</strong> <span th:text="${order.orderId}"></span></p>
+            <p><strong>Name:</strong> <span th:text="${order.name}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${order.email}"></span></p>
+            <p><strong>Mobile:</strong> <span th:text="${order.mobile}"></span></p>
+            <p><strong>Address:</strong> <span th:text="${order.address}"></span></p>
+            <p><strong>Payment Mode:</strong> <span th:text="${order.paymentMode}"></span></p>
         </div>
     </div>
 
@@ -97,40 +97,15 @@
         <div class="card-body">
             <h4>Products</h4>
             <ul id="product-list" class="list-group">
-                <!-- Product items will be dynamically inserted here -->
+                <li th:each="product : ${order.products}" class="list-group-item d-flex justify-content-between align-items-center">
+                    <div th:text="${product.name}"></div>
+                    <div>₹<span th:text="${product.price}"></span> x <span th:text="${product.quantity}"></span></div>
+                </li>
             </ul>
-            <h5 class="mt-3 text-center">Total Price: ₹<span id="total-price">0</span></h5>
+            <h5 class="mt-3 text-center">Total Price: ₹<span th:text="${order.totalPrice}"></span></h5>
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const orderDetails = JSON.parse(localStorage.getItem('orderDetails'));
-
-        if (orderDetails) {
-            document.getElementById('order-id').innerText = orderDetails.orderId;
-            document.getElementById('user-name').innerText = orderDetails.name;
-            document.getElementById('user-mobile').innerText = orderDetails.mobile;
-            document.getElementById('user-email').innerText = orderDetails.email;
-            document.getElementById('user-address').innerText = orderDetails.address;
-            document.getElementById('payment-mode').innerText = orderDetails.paymentMode;
-            document.getElementById('total-price').innerText = orderDetails.totalPrice;
-
-            const productList = document.getElementById('product-list');
-            orderDetails.products.forEach(product => {
-                const productItem = document.createElement('li');
-                productItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-                productItem.innerHTML = `
-                    <div>${product.name}</div>
-                    <div>₹${product.price} x ${product.quantity}</div>
-                `;
-                productList.appendChild(productItem);
-            });
-        } else {
-            document.querySelector('.card-body').innerHTML = '<p class="text-center">No order details found.</p>';
-        }
-    });
-</script>
 <footer class="text-center mt-5">
     <div class="container">
         <div class="row">

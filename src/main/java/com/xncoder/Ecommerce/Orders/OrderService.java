@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xncoder.Ecommerce.ExceptionClass;
-import com.xncoder.Ecommerce.Carts.CartRepository;
 import com.xncoder.Ecommerce.Carts.Carts;
 import com.xncoder.Ecommerce.Customer.CustomerRepository;
 import com.xncoder.Ecommerce.Customer.Customers;
@@ -25,10 +24,7 @@ public class OrderService {
     @Autowired
     private ProductRepository pr;
     
-    @Autowired
-    private CartRepository crp;
-    
-    public void addOrders(Long customerId, String name, String mobile, String address, String payment) {
+    public CustomerOrder addOrders(Long customerId, String name, String mobile, String address, String payment) {
         
         Customers c = cr.findById(customerId).orElseThrow(() -> new ExceptionClass("Customer not found"));
         c.setName(name);
@@ -38,24 +34,27 @@ public class OrderService {
         
         List<Carts> cartItems = c.getCartItems();
         CustomerOrder o = new CustomerOrder();
-        o.setPayment(payment);
         o.setAddress(address);
         o.setMobile(mobile);
-        o.setCustomer(c);
+        o.setPayment(payment);
+        o.setCustomer(customerId);
         
-        List<Product> products = new ArrayList<>();
+        List<Long> products = new ArrayList<>();
         for(Carts cart: cartItems) {
-            Product p = cart.getProduct();
-            products.add(p);
+            Product p = pr.findById(cart.getProduct()).orElseThrow(() -> new ExceptionClass("Product not found"));
+            products.add(p.getId());
             p.setQuantity(p.getQuantity() - cart.getQuantity());
             pr.save(p);
-            crp.delete(cart);
         }
         o.setProducts(products);
-        or.save(o);
+        return or.save(o);
     }
-   
-    public List<CustomerOrder> getOrderById(Long id) {
+    
+    public CustomerOrder getOrderById(Long id) {
+    	return or.findById(id).orElseThrow(() -> new ExceptionClass("Order not found"));
+    }
+  
+    public List<CustomerOrder> getOrderByCustomerId(Long id) {
         Customers c = cr.findById(id).orElseThrow(() -> new ExceptionClass("Customer not found"));
         return or.getOrderByCustomer(c);
     }

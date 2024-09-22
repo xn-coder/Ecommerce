@@ -1,8 +1,8 @@
 package com.xncoder.Ecommerce.Carts;
 
 import com.xncoder.Ecommerce.Customer.Customers;
-import com.xncoder.Ecommerce.Products.Product;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,9 +20,8 @@ public class Carts {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customers customer;
 	
-	@ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @Column(nullable = false)
+    private Long product;
 	
 	private int quantity;
 
@@ -42,6 +41,7 @@ public class Carts {
 		this.id = id;
 	}
 
+
 	public Customers getCustomer() {
 		return customer;
 	}
@@ -50,14 +50,13 @@ public class Carts {
 		this.customer = customer;
 	}
 
-	public Product getProduct() {
+	public Long getProduct() {
 		return product;
 	}
 
-	public void setProduct(Product product) {
+	public void setProduct(Long product) {
 		this.product = product;
 	}
-	
 	
 
 }

@@ -5,17 +5,11 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.xncoder.Ecommerce.Customer.Customers;
-import com.xncoder.Ecommerce.Products.Product;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,20 +18,9 @@ public class CustomerOrder {  // Rename class
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long order_id;
-    
-    public List<Product> getProducts() {
-		return products;
-	}
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
-	@OneToOne
-    @JoinColumn(name = "cid", nullable = false)
-    private Customers customer;
-    
-    @OneToMany
-    @JoinColumn(name = "pid", nullable = false)
-    private List<Product> products;
+
+    @Column(name = "customerId")
+    private Long customer;
     
     @CreationTimestamp
     private LocalDateTime date;
@@ -45,7 +28,16 @@ public class CustomerOrder {  // Rename class
     @Column(nullable = false)
     private String payment;
     
-    private String address;
+    @Column(name="pid")
+    private List<Long> products;
+    
+	public List<Long> getProducts() {
+		return products;
+	}
+	public void setProducts(List<Long> products) {
+		this.products = products;
+	}
+	private String address;
     
     private String mobile;
     
@@ -73,10 +65,10 @@ public class CustomerOrder {  // Rename class
     public void setOrder_id(Long order_id) {
         this.order_id = order_id;
     }
-    public Customers getCustomer() {
+    public Long getCustomer() {
         return customer;
     }
-    public void setCustomer(Customers customer) {
+    public void setCustomer(Long customer) {
         this.customer = customer;
     }
     public LocalDateTime getDate() {

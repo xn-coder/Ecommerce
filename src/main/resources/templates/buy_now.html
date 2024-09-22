@@ -249,8 +249,18 @@
                 body: formData
             })
             .then(async response => {
-                console.log(await response.status);
-                    // window.location.href = '/order_success';
+                if(await response.status === 200){
+                    // fetch('/api/cart/clear', {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Authorization': `Bearer ${token}`
+                    //     },
+                    //     body: formData
+                    // }).then(async res => {
+                    //     if(await res.status === 200)
+                            window.location.href = `/api/orders/order_success/${await  response.text()}`;
+                    // })
+                }
             })
             .catch(error => console.error('Error:', error));
         });
