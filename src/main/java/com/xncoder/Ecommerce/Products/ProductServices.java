@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xncoder.Ecommerce.ExceptionClass;
-import com.xncoder.JPAProject.Tasks;
 
 @Service
 public class ProductServices {
@@ -22,12 +21,13 @@ public class ProductServices {
 	public Product getProductByID(Long id) {
 		return pr.findById(id).orElseThrow(() -> new ExceptionClass("Product not found by id = " + id));
 	}
-	
+
 	public void updateProduct(Product p, Long id) {
 		Product pi = getProductByID(id);
-		pi.setName(p.getName);
+		pi.setName(p.getName());
 		pi.setQuantity(p.getQuantity());
 		pi.setDescription(p.getDescription());
+		pi.setPrice(p.getPrice());
 		pi.setImage(p.getImage());
 		pr.save(pi);
 	}

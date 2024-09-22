@@ -1,0 +1,117 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        img {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+        .quantity {
+            width: 50px;
+            text-align: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        /* Hide Customer ID and Product ID but keep the data */
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/orders')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    // Process the data and update the table
+                    const tbody = document.querySelector('tbody');
+                    tbody.innerHTML = ''; // Clear existing rows
+                    data.forEach(order => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><img src="${order.product.image}" alt="Product Image"></td>
+                            <td>${order.oid}</td>
+                            <td class="hidden">${order.customer.cid}</td>
+                            <td class="hidden">${order.product.pid}</td>
+                            <td>${order.product.p_name}</td>
+                            <td class="quantity">${order.quantity}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching orders:', error));
+        });
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Order History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Image</th>
+                <th>Order ID</th>
+                <!-- Customer ID and Product ID columns are hidden -->
+                <th class="hidden">Customer ID</th>
+                <th class="hidden">Product ID</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Thymeleaf will loop through orders -->
+            
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

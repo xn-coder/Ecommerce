@@ -41,16 +41,19 @@ public class ProductController {
 	
 	@PostMapping
 	public ResponseEntity<Product> addProduct(@PathVariable @RequestParam("name") String name,
-            @RequestParam("quantity") String quantity,
+            @RequestParam("quantity") int quantity,
             @RequestParam("description") String description,
+            @RequestParam("price") double price,
             @RequestParam("image") MultipartFile imageFile) {
 		Product p = new Product();
 		p.setName(name);
         p.setQuantity(quantity);
         p.setDescription(description);
+        p.setPrice(price);
 
         try {
-			return ResponseEntity.ok(ps.addProduct(p, imageFile));
+        	ps.addProduct(p, imageFile);
+			return ResponseEntity.ok(p);
 		} catch (IOException e) {
 			return ResponseEntity.status(500).build();
 		}

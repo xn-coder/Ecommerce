@@ -15,14 +15,22 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long product_id;
+	
 	@Column(nullable=false, columnDefinition = "LONGBLOB")
 	private byte[] image;
+	
 	@Column(nullable=false)
 	private String name;
+	
 	@Column(nullable=false)
-	private String quantity;
+	private int quantity;
+	
 	@Column(nullable=false)
 	private String description;
+	
+	@Column(nullable=false)
+	private double price;
+	
 	public Long getProduct_id() {
 		return product_id;
 	}
@@ -41,10 +49,10 @@ public class Product {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getQuantity() {
+	public int getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(String quantity) {
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 	public String getDescription() {
@@ -52,5 +60,11 @@ public class Product {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
 	}
 }
