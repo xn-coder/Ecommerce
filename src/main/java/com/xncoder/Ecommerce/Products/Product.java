@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Product {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long product_id;
+	private Long id;
 	
 	@Column(nullable=false, columnDefinition = "LONGBLOB")
 	private byte[] image;
@@ -30,12 +30,13 @@ public class Product {
 	
 	@Column(nullable=false)
 	private double price;
+
 	
-	public Long getProduct_id() {
-		return product_id;
+	public Long getId() {
+		return id;
 	}
-	public void setProduct_id(Long product_id) {
-		this.product_id = product_id;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public byte[] getImage() {
 		return image;
