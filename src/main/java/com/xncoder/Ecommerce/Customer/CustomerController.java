@@ -43,7 +43,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
     }
-    
+   
     @GetMapping("/{id}")
     public ResponseEntity<?> getCustomer(@PathVariable Long id) {
     	return ResponseEntity.ok(cs.getCustomerById(id));

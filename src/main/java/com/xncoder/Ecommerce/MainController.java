@@ -37,7 +37,7 @@ public class MainController {
 		model.addAttribute("products", productDTOs);
 		return "index";
 	}
-	
+
 	@GetMapping("/history")
 	public String history() {
 		return "history";

@@ -24,7 +24,7 @@ public class CartController {
         cs.addProductToCart(customerId, productId);
         return ResponseEntity.ok("Product added to cart");
     }
-
+	
 	@PostMapping("/remove")
     public ResponseEntity<String> removeProductFromCart(
             @RequestParam Long customerId,
@@ -39,7 +39,7 @@ public class CartController {
         cs.clearCarts(customerId);
         return ResponseEntity.ok("Product removed from cart or quantity decreased");
     }
-
+	
 	@GetMapping("/count/{customerId}")
     public ResponseEntity<Integer> getCartProductCount(@PathVariable Long customerId) {
         int totalQuantity = cs.getCartProductCount(customerId);

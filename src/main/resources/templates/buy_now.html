@@ -67,6 +67,9 @@
                         </a>
                     </li>
                     <li class="nav-item" id="login-signup-nav-item">
+                        <a class="nav-link" href="/history">Orders</a>
+                    </li>
+                    <li class="nav-item" id="login-signup-nav-item">
                         <a class="nav-link" href="/login_or_signup">Login/SignUp</a>
                     </li>
                     <li class="nav-item" id="account-nav-item">
@@ -154,11 +157,14 @@
             localStorage.removeItem('token');
             document.getElementById('account-nav-item').style.display = 'none';
             document.getElementById('login-signup-nav-item').style.display = 'block';
+            window.location.href = '/login_or_signup';
         }
     })
     .catch(error => {
+        localStorage.removeItem('token');
         console.error('Error:', error);
         showAlert("An error occurred while adding the product to the cart.", "danger");
+        window.location.href = '/login_or_signup';
     });
 
     function updateCartCount() {

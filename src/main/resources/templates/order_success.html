@@ -67,6 +67,9 @@
                         </a>
                     </li>
                     <li class="nav-item" id="login-signup-nav-item">
+                        <a class="nav-link" href="/history">Orders</a>
+                    </li>
+                    <li class="nav-item" id="login-signup-nav-item">
                         <a class="nav-link" href="/login_or_signup">Login/SignUp</a>
                     </li>
                     <li class="nav-item" id="account-nav-item">
@@ -138,14 +141,33 @@
 <script>
     let customerId;
     const token = localStorage.getItem('token');
-    if(token && jwt_decode(token).exp > Date.now() / 1000) {
-        customerId = jwt_decode(token).customerId;
-        document.getElementById('account-nav-item').style.display = 'block';
-        document.getElementById('login-signup-nav-item').style.display = 'none';
-    } else {
-        document.getElementById('account-nav-item').style.display = 'none';
-        document.getElementById('login-signup-nav-item').style.display = 'block';
-    }
+    fetch('/api/customer', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(async response => {
+        if(await response.status === 200){
+            customerId = jwt_decode(token).customerId;
+            updateCartCount();
+            loadCartItems();
+            document.getElementById('account-nav-item').style.display = 'block';
+            document.getElementById('login-signup-nav-item').style.display = 'none';
+        } else {
+            customerId = null;
+            localStorage.removeItem('token');
+            document.getElementById('account-nav-item').style.display = 'none';
+            document.getElementById('login-signup-nav-item').style.display = 'block';
+            window.location.href = '/login_or_signup';
+        }
+    })
+    .catch(error => {
+        localStorage.removeItem('token');
+        console.error('Error:', error);
+        showAlert("An error occurred while adding the product to the cart.", "danger");
+        window.location.href = '/login_or_signup';
+    });
 </script>
 </body>
 </html>
