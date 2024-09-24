@@ -40,20 +40,23 @@
             margin: 0;
         }
         .card .col-md-2 img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
+            width: 60px; /* Reduced width */
+            height: 60px; /* Reduced height */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
         }
         .card .col-md-8, .card .col-md-2 {
             display: flex;
             align-items: center;
-            padding: 5px;
+            padding: 5px; /* Reduced padding */
         }
         .card .col-md-8 {
-            justify-content: space-between;
+            justify-content: space-between; /* Ensure proper spacing */
         }
         .card .col-md-2 {
-            justify-content: center;
+            justify-content: center; /* Center the delete button */
+        }
+        .card-body {
+            flex: 1;
         }
         footer {
             background-color: #343a40;
@@ -88,7 +91,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/history">Orders</a>
                     </li>
-                    <li class="nav-item" id="login-signup-nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="/login_or_signup">Login/SignUp</a>
                     </li>
                     <li class="nav-item" id="account-nav-item">
@@ -150,16 +153,17 @@
                         orderElement.className = 'col-12 mb-2 d-flex justify-content-center';
                         orderElement.innerHTML = `
                             <div class="card" style="width: 80%;">
-                                <div class="card-header">
-                                    Order ID: ${order.id}
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Order ID: ${order.order_id}</span>
+                                    <button class="btn btn-primary btn-sm" onclick="viewOrder(${order.order_id})">View Order</button>
                                 </div>
                                 <div class="card-body">
                                     ${order.products.map(product => `
                                         <div class="row g-0 mb-2">
                                             <div class="col-md-2">
-                                                <img src="data:image/jpeg;base64,${product.image}" alt="${product.name}" class="img-fluid rounded-start">
+                                                <img src="data:image/jpeg;base64,${product.image}" alt="${product.name}" class="img-fluid rounded-start small-img">
                                             </div>
-                                            <div class="col-md-8">
+                                            <div class="col-md-10">
                                                 <div class="card-body">
                                                     <h5 class="card-title">${product.name}</h5>
                                                     <p class="card-text">₹${product.price} x ${product.quantity}</p>
@@ -180,6 +184,11 @@
                 console.error('Error fetching order history:', error);
                 orderHistoryContainer.innerHTML = '<p class="text-center text-danger">Failed to load order history.</p>';
             });
+        }
+
+        function viewOrder(orderId) {
+            // Implement the logic to view the order details
+            console.log('View order:', orderId);
         }
     </script>
     <footer class="text-center mt-5">
