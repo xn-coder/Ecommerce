@@ -1,5 +1,6 @@
 package com.xncoder.Ecommerce.Orders;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -75,8 +76,8 @@ public class OrderService {
     			Product p = pr.findById(co.getProducts().get(i)).orElseThrow(() -> new ExceptionClass("Product not found"));
     			plist.add(new Prod(Base64.getEncoder().encodeToString(p.getImage()), p.getName(), p.getPrice(), co.getQuantity().get(i)));
     		}
-    		orlist.add(new UserDTO(co.getOrder_id(), plist));
+    		orlist.add(new UserDTO(co.getOrder_id(), co.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), co.getTotalprice(), plist));
     	}
         return orlist;
-    }
+    }	
 }

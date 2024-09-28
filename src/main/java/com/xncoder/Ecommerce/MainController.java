@@ -40,8 +40,8 @@ public class MainController {
 
 	@GetMapping("/history")
 	public String history() {
-		return "history";
-	}
+		return "order_history";
+	}	
 	
 	@GetMapping("/seller")
 	public String seller(Model model) {
@@ -69,10 +69,21 @@ public class MainController {
 		CustomerOrder c = os.getOrderById(orderid);
 		List<ProdDTO> prod = new ArrayList<ProdDTO>();
 		for(int i=0; i<c.getQuantity().size(); i++) {
-			prod.add(new ProdDTO(c.getName(), c.getPrice().get(i), c.getQuantity().get(i)));
+			prod.add(new ProdDTO(ps.getProductByID(c.getProducts().get(i)).getName(), c.getPrice().get(i), c.getQuantity().get(i)));
 		}
 		model.addAttribute("order", new OrderDTO(orderid, c.getName(), c.getEmail(), c.getMobile(), c.getAddress(), c.getPayment(), c.getTotalprice(), prod));
 		return "order_success";
+	}
+	
+	@GetMapping("/view_order/{orderid}")
+	public String view(@PathVariable Long orderid, Model model) {
+		CustomerOrder c = os.getOrderById(orderid);
+		List<ProdDTO> prod = new ArrayList<ProdDTO>();
+		for(int i=0; i<c.getQuantity().size(); i++) {
+			prod.add(new ProdDTO(c.getName(), c.getPrice().get(i), c.getQuantity().get(i)));
+		}
+		model.addAttribute("order", new OrderDTO(orderid, c.getName(), c.getEmail(), c.getMobile(), c.getAddress(), c.getPayment(), c.getTotalprice(), prod));
+		return "view_order";
 	}
 
 	@GetMapping("/profile")

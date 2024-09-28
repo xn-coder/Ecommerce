@@ -139,33 +139,70 @@
 </footer>
 <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
 <script>
-    let customerId;
+    const cartCountElement = document.getElementById('cart-count');
+    const account = document.getElementById('account-nav-item');
+    const login = document.getElementById('login-signup-nav-item');
+    let customerId, tokenValid = false;
     const token = localStorage.getItem('token');
-    fetch('/api/customer', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(async response => {
-        if(await response.status === 200){
-            customerId = jwt_decode(token).customerId;
-            document.getElementById('account-nav-item').style.display = 'block';
-            document.getElementById('login-signup-nav-item').style.display = 'none';
-        } else {
-            customerId = null;
-            localStorage.removeItem('token');
-            document.getElementById('account-nav-item').style.display = 'none';
-            document.getElementById('login-signup-nav-item').style.display = 'block';
+
+    if (!token) {
+        customerId = null;
+        tokenValid = false;
+        account.style.display = 'none';
+        login.style.display = 'block';
+    } else {
+        fetch('/api/customer', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(async response => {
+            if(await response.status === 200){
+                customerId = jwt_decode(token).customerId;
+                tokenValid = true;
+                account.style.display = 'block';
+                login.style.display = 'none';
+                updateCartCount();
+                loadCartItems();
+            } else {
+                customerId = null;
+                localStorage.removeItem('token');
+                document.getElementById('account-nav-item').style.display = 'none';
+                document.getElementById('login-signup-nav-item').style.display = 'block';
+                window.location.href = '/login_or_signup';
+            }
+        })
+        .catch(error => {
+            tokenValid = false;
+            console.error('Error:', error);
+            showAlert("An error occurred while adding the product to the cart.", "danger");
             window.location.href = '/login_or_signup';
+        });
+    }
+
+    function updateCartCount() {
+        if(!tokenValid){
+            return;
         }
-    })
-    .catch(error => {
-        localStorage.removeItem('token');
-        console.error('Error:', error);
-        showAlert("An error occurred while adding the product to the cart.", "danger");
-        window.location.href = '/login_or_signup';
-    });
+        fetch('/api/cart/count/' + customerId, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(async response => {
+            if(await response.status === 200){
+                cartCountElement.textContent = await response.text();
+            }
+            else{
+                cartCountElement.textContent = "0";
+            }
+        })
+        .catch(error => {
+            cartCountElement.textContent = "0";
+        });
+    }
 </script>
 </body>
 </html>

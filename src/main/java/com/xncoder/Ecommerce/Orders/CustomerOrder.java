@@ -32,6 +32,14 @@ public class CustomerOrder {  // Rename class
     private String email;
     private double totalprice;
     
+    @Column(name="pid")
+    private List<Long> products;
+    
+    private List<Integer> quantity;
+    private List<Double> price;
+    private String address;
+    private String mobile;
+    
     public double getTotalprice() {
 		return totalprice;
 	}
@@ -50,13 +58,6 @@ public class CustomerOrder {  // Rename class
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	@Column(name="pid")
-    private List<Long> products;
-    
-    private List<Integer> quantity;
-    
-    private List<Double> price;
-    
 	public List<Double> getPrice() {
 		return price;
 	}
@@ -75,10 +76,6 @@ public class CustomerOrder {  // Rename class
 	public void setProducts(List<Long> products) {
 		this.products = products;
 	}
-	private String address;
-    
-    private String mobile;
-    
     public String getAddress() {
 		return address;
 	}

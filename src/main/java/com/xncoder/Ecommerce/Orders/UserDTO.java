@@ -39,16 +39,33 @@ class Prod {
 		this.quantity = quantity;
 	}
 	
-}
+}	
 
 public class UserDTO {
 	private Long order_id;
-	public UserDTO(Long order_id, List<Prod> products) {
+	private String date;
+	private Double total_price;
+	private List<Prod> products;
+	
+	public UserDTO(Long order_id, String date, Double total_price, List<Prod> products) {
 		super();
 		this.order_id = order_id;
+		this.date = date;
+		this.total_price = total_price;
 		this.products = products;
 	}
-	private List<Prod> products;
+	public Double getTotal_price() {
+		return total_price;
+	}
+	public void setTotal_price(Double total_price) {
+		this.total_price = total_price;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public Long getOrder_id() {
 		return order_id;
 	}
