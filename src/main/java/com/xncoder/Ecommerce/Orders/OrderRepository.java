@@ -9,6 +9,6 @@ import com.xncoder.Ecommerce.Customer.Customers;
 
 @Repository
 public interface OrderRepository extends JpaRepository<CustomerOrder, Long> {
-	public List<CustomerOrder> getOrderByCustomer(Customers customer);
+	public List<CustomerOrder> getOrderByCustomer(Long customerId);
 }
 

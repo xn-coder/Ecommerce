@@ -28,19 +28,54 @@ public class CustomerOrder {  // Rename class
     @Column(nullable = false)
     private String payment;
     
+    private String name;
+    private String email;
+    private double totalprice;
+    
     @Column(name="pid")
     private List<Long> products;
     
+    private List<Integer> quantity;
+    private List<Double> price;
+    private String address;
+    private String mobile;
+    
+    public double getTotalprice() {
+		return totalprice;
+	}
+	public void setTotalprice(double totalprice) {
+		this.totalprice = totalprice;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public List<Double> getPrice() {
+		return price;
+	}
+	public void setPrice(List<Double> price) {
+		this.price = price;
+	}
+	public List<Integer> getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(List<Integer> quantity) {
+		this.quantity = quantity;
+	}
 	public List<Long> getProducts() {
 		return products;
 	}
 	public void setProducts(List<Long> products) {
 		this.products = products;
 	}
-	private String address;
-    
-    private String mobile;
-    
     public String getAddress() {
 		return address;
 	}

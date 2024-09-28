@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xncoder.Ecommerce.Security;
+
 @RestController
 @RequestMapping("/api/customer")
 public class CustomerController {
@@ -41,7 +43,7 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
     }
-    
+   
     @GetMapping("/{id}")
     public ResponseEntity<?> getCustomer(@PathVariable Long id) {
     	return ResponseEntity.ok(cs.getCustomerById(id));

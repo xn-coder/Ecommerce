@@ -1,4 +1,4 @@
-package com.xncoder.Ecommerce.Customer;
+package com.xncoder.Ecommerce;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

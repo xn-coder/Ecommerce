@@ -1,8 +1,10 @@
-package com.xncoder.Ecommerce.Customer;
+package com.xncoder.Ecommerce;
 
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+
+import com.xncoder.Ecommerce.Customer.Customers;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -25,15 +27,18 @@ public class Security {
 	public String extractEmail(String token) {
 		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
 	}
-
+	
 	public boolean isTokenExpired(String token) {
 		try {
-	        Jwts.parser()
-	            .setSigningKey(SECRET_KEY)
-	            .parseClaimsJws(token);
-	        return true;
-	    } catch (JwtException e) {
-	        return false;
-	    }
+            Date expiration = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+            return expiration.after(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return true;
+        }
 	}
 }
+

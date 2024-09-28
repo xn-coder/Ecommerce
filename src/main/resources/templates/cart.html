@@ -107,6 +107,9 @@
                             <span id="cart-count" class="badge bg-secondary">0</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/history">Orders</a>
+                    </li>
                     <li class="nav-item" id="login-signup-nav-item">
                         <a class="nav-link" href="/login_or_signup">Login/SignUp</a>
                     </li>
@@ -150,18 +153,24 @@
                 localStorage.removeItem('token');
                 document.getElementById('account-nav-item').style.display = 'none';
                 document.getElementById('login-signup-nav-item').style.display = 'block';
+                window.location.href = '/login_or_signup';
             }
         })
         .catch(error => {
+            localStorage.removeItem('token');
             console.error('Error:', error);
-            showAlert("An error occurred while adding the product to the cart.", "danger");
+            window.location.href = '/login_or_signup';
         });
         function loadCartItems() {
             const cartItemsContainer = document.getElementById('cart-items');
             const totalPriceCardContainer = document.getElementById('total-price-card');
 
             // Fetch cart items from the server
-            fetch('/api/cart/products/' + customerId)
+            fetch('/api/cart/products/' + customerId, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
                 .then(async response => {
                     if(await response.status === 200){
                         const cartItems = await response.json();
